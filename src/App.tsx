@@ -1,20 +1,17 @@
+import { useAtom } from 'jotai';
 import React from 'react';
 
-import useVotes from './atoms/vote';
+import votesAtom from './atoms/votes';
 
 const App = () => {
-  const { votes, vote, reset } = useVotes();
-
-  const good = () => vote('good');
-  const ok = () => vote('ok');
-  const bad = () => vote('bad');
+  const [votes, vote] = useAtom(votesAtom);
 
   return (
     <div>
-      <button onClick={good}>good</button>
-      <button onClick={ok}>ok</button>
-      <button onClick={bad}>bad</button>
-      <button onClick={reset}>reset stats</button>
+      <button onClick={() => vote('good')}>good</button>
+      <button onClick={() => vote('ok')}>ok</button>
+      <button onClick={() => vote('bad')}>bad</button>
+      <button onClick={() => vote('reset')}>reset stats</button>
       <div>good {votes.good}</div>
       <div>ok {votes.ok}</div>
       <div>bad {votes.bad}</div>

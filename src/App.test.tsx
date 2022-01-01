@@ -2,7 +2,6 @@ import '@testing-library/jest-dom';
 
 import { fireEvent, render, RenderResult } from '@testing-library/react';
 import * as React from 'react';
-import { RecoilRoot } from 'recoil';
 
 import App from './App';
 
@@ -23,11 +22,7 @@ describe('<App />', () => {
   let component: RenderResult;
 
   beforeEach(() => {
-    component = render(
-      <RecoilRoot>
-        <App />
-      </RecoilRoot>,
-    );
+    component = render(<App />);
   });
 
   test('displaying good votes', async () => {
