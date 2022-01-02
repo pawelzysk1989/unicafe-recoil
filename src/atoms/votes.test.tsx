@@ -4,12 +4,16 @@ import React from 'react';
 
 import votesAtom, { initState } from './votes';
 
+const renderHookWithAtom = () => {
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <Provider>{children}</Provider>
+  );
+  return renderHook(() => useAtom(votesAtom), { wrapper });
+};
+
 describe('Votes atom', () => {
   test('should increment good votes', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <Provider>{children}</Provider>
-    );
-    const { result } = renderHook(() => useAtom(votesAtom), { wrapper });
+    const { result } = renderHookWithAtom();
 
     act(() => {
       result.current[1]('good');
@@ -21,10 +25,7 @@ describe('Votes atom', () => {
     });
   });
   test('should increment bad votes', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <Provider>{children}</Provider>
-    );
-    const { result } = renderHook(() => useAtom(votesAtom), { wrapper });
+    const { result } = renderHookWithAtom();
 
     act(() => {
       result.current[1]('bad');
@@ -36,10 +37,7 @@ describe('Votes atom', () => {
     });
   });
   test('should increment ok votes', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <Provider>{children}</Provider>
-    );
-    const { result } = renderHook(() => useAtom(votesAtom), { wrapper });
+    const { result } = renderHookWithAtom();
 
     act(() => {
       result.current[1]('ok');
@@ -49,5 +47,15 @@ describe('Votes atom', () => {
       ...initState,
       ok: 1,
     });
+  });
+
+  test('should reset votes', () => {
+    const { result } = renderHookWithAtom();
+
+    act(() => {
+      result.current[1]('reset');
+    });
+
+    expect(result.current[0]).toEqual(initState);
   });
 });

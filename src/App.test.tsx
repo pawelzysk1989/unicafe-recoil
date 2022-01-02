@@ -1,66 +1,43 @@
 import '@testing-library/jest-dom';
 
-import { fireEvent, render, RenderResult } from '@testing-library/react';
+import { fireEvent, render, RenderResult, screen } from '@testing-library/react';
 import * as React from 'react';
 
 import App from './App';
-
-const vote = jest.fn();
-const reset = jest.fn();
-
-jest.mock('./atoms/vote', () => () => ({
-  votes: {
-    good: 0,
-    bad: 1,
-    ok: 3,
-  },
-  vote,
-  reset,
-}));
 
 describe('<App />', () => {
   let component: RenderResult;
 
   beforeEach(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     component = render(<App />);
   });
 
-  test('displaying good votes', async () => {
-    const element = await component.findByText('good 0');
-    expect(element).toBeDefined();
-  });
-
-  test('displaying bad votes', async () => {
-    const element = await component.findByText('bad 1');
-    expect(element).toBeDefined();
-  });
-
-  test('displaying ok votes', async () => {
-    const element = await component.findByText('ok 3');
-    expect(element).toBeDefined();
-  });
-
-  test('click good button', async () => {
-    const goodButton = await component.findByText('good');
+  test('click good button', () => {
+    const goodButton = screen.getByText('good');
+    const goodElement = screen.getByText('good 0');
     fireEvent.click(goodButton);
-    expect(vote).toBeCalledWith('good');
+    expect(goodElement.textContent).toEqual('good 1');
   });
-
-  test('click bad button', async () => {
-    const badButton = await component.findByText('bad');
+  test('click bad button', () => {
+    const badButton = screen.getByText('bad');
+    const badElement = screen.getByText('bad 0');
     fireEvent.click(badButton);
-    expect(vote).toBeCalledWith('bad');
+    expect(badElement.textContent).toEqual('bad 1');
   });
-
-  test('click ok button', async () => {
-    const okButton = await component.findByText('ok');
+  test('click ok button', () => {
+    const okButton = screen.getByText('ok');
+    const okElement = screen.getByText('ok 0');
     fireEvent.click(okButton);
-    expect(vote).toBeCalledWith('ok');
+    expect(okElement.textContent).toEqual('ok 1');
   });
 
-  test('click reset button', async () => {
-    const resetButton = await component.findByText('reset stats');
+  test('click reset stats button', () => {
+    const resetButton = screen.getByText('reset stats');
     fireEvent.click(resetButton);
-    expect(reset).toBeCalledTimes(1);
+
+    screen.getByText('good 0');
+    screen.getByText('bad 0');
+    screen.getByText('ok 0');
   });
 });
